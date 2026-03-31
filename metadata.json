@@ -1,0 +1,5 @@
+{
+  "name": "Turkey Weather Visualizer",
+  "description": "Interactive weather map of Turkey with province-based warnings, forecasts, and export functionality.",
+  "requestFramePermissions": []
+}
