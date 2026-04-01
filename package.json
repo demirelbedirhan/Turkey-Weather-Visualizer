@@ -26,7 +26,6 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-leaflet": "^5.0.0",
-    "react-turkey-map": "^1.0.19",
     "tailwind-merge": "^3.5.0",
     "topojson-client": "^3.1.0",
     "vite": "^8.0.3"
@@ -41,11 +40,5 @@
     "tsx": "^4.21.0",
     "typescript": "~6.0.2",
     "vite": "^8.0.3"
-  },
-  "overrides": {
-    "react-turkey-map": {
-      "react": "$react",
-      "react-dom": "$react-dom"
-    }
   }
 }
