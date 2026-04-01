@@ -3,7 +3,7 @@ import { cn } from "@/src/lib/utils";
 import { 
   Cloud, Sun, Download, Map as MapIcon, Info, ExternalLink
 } from "lucide-react";
-import { toJpeg } from "html-to-image";
+import { toJpeg, toSvg } from "html-to-image";
 import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 import * as topojson from "topojson-client";
 import L from "leaflet";
@@ -22,6 +22,7 @@ export default function App() {
   const [geoData, setGeoData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [customData, setCustomData] = useState("");
+  const [showExportMenu, setShowExportMenu] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const processWarningsData = (warningsData: any) => {
@@ -154,6 +155,23 @@ export default function App() {
     }
   };
 
+  const exportSvg = async () => {
+    if (containerRef.current === null) return;
+    try {
+      const dataUrl = await toSvg(containerRef.current, { 
+        backgroundColor: '#ffffff',
+        width: 1620,
+        height: 1080,
+      });
+      const link = document.createElement("a");
+      link.download = "turkey-weather-map.svg";
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error("Export failed", err);
+    }
+  };
+
   const getWarningColor = (level: string) => {
     switch (level) {
       case 'red': return '#dd2c0a';
@@ -249,14 +267,30 @@ export default function App() {
       </div>
 
       {/* Top Right Controls */}
-      <div className="fixed top-4 right-4 z-50">
+      <div className="fixed top-4 right-4 z-50 relative">
         <button 
-          onClick={exportJpeg}
+          onClick={() => setShowExportMenu(!showExportMenu)}
           className="flex items-center gap-2 bg-slate-800 text-white px-6 py-3 rounded-full font-bold uppercase text-sm hover:bg-slate-700 transition-all shadow-lg"
         >
           <Download className="w-5 h-5" />
-          Görseli İndir
+          Görsel Dışarı Aktar
         </button>
+        {showExportMenu && (
+          <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-xl border border-slate-200 overflow-hidden flex flex-col w-full">
+            <button 
+              onClick={() => { exportJpeg(); setShowExportMenu(false); }}
+              className="px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-100 text-left"
+            >
+              JPEG İndir
+            </button>
+            <button 
+              onClick={() => { exportSvg(); setShowExportMenu(false); }}
+              className="px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-100 text-left border-t border-slate-100"
+            >
+              SVG İndir
+            </button>
+          </div>
+        )}
       </div>
 
       <div 
